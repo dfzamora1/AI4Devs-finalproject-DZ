@@ -6,7 +6,7 @@ ConectaPH conecta residentes, administración y vigilancia. Esta entrega impleme
 
 ## Estado y alcance real
 
-Implementado: JWT, contexto de copropiedad, RBAC persistido, zonas, disponibilidad, reservas propias, detección de concurrencia, invitados, consultas de vigilancia y consultas administrativas básicas; frontend React con rutas y navegación por permiso. Cancelación y CRUD administrativo avanzado quedan pendientes.
+Implementado en código: JWT, contexto de copropiedad, RBAC persistido, zonas, disponibilidad, reservas propias, detección de concurrencia, cancelación futura propia, invitados, consultas de vigilancia y consultas administrativas básicas; frontend React con rutas y navegación por permiso. La migración inicial, la integración y los contratos de invitados aún requieren corrección/validación; no se considera un flujo E2E aprobado. CRUD administrativo avanzado y cancelación administrativa quedan pendientes.
 
 Stack: Node.js 20+, Express, TypeScript estricto, Zod, Prisma, PostgreSQL 16, bcrypt, JWT, React, Vite, Vitest, Testing Library y Playwright.
 
@@ -41,17 +41,20 @@ Todas las respuestas usan `{ success, data, message }` o `{ success:false, error
 - `POST /api/auth/login`; `GET /api/auth/me`
 - `GET /api/common-areas`; `GET /api/common-areas/:id`; `GET /api/common-areas/:id/availability`
 - `POST /api/reservations`; `GET /api/reservations/my`; `GET /api/reservations/:id`
-- `POST|GET /api/reservations/:id/guests`
+- `PATCH /api/reservations/:id/cancel`
+- `POST|GET /api/reservations/:id/guests`; `DELETE /api/reservations/:reservationId/guests/:guestId`
 - `GET /api/security/reservations`; `GET /api/security/reservations/:id`
 - `GET /api/admin/reservations`; `GET /api/admin/users`; `GET /api/admin/property-units`
 
 ## Estructura y documentación
 
-`backend/` contiene API, Prisma, seed y pruebas; `frontend/` la SPA; `e2e/` Playwright; `docker-compose.yml` PostgreSQL; `.github/` CI. Véanse [ConectaPH-PRD.md](ConectaPH-PRD.md), [ConectaPH-C4-Diagrams.md](ConectaPH-C4-Diagrams.md) y [prompts.md](prompts.md).
+`backend/` contiene API, Prisma, seed y pruebas; `frontend/` la SPA; `e2e/` Playwright; `docker-compose.yml` PostgreSQL; `.github/` CI. El proceso está descrito en [agents.md](agents.md), las historias en [5-historias-de-usuario.md](5-historias-de-usuario.md), los tickets en [6-tickets-de-trabajo.md](6-tickets-de-trabajo.md) y la relación con código/pruebas en [trazabilidad.md](trazabilidad.md). Los documentos `ConectaPH-PRD.md` y `ConectaPH-C4-Diagrams.md` provienen de la primera entrega y requieren alineación completa antes de usarse como especificación vigente.
 
 ## Limitaciones
 
 No se implementan pagos, cartera, PQRS, notificaciones, QR, control de ingreso/salida ni editor de roles. El E2E requiere PostgreSQL migrado y sembrado. Las credenciales son exclusivamente locales. No existe despliegue ni PR remoto asociado a esta entrega.
+
+Validación del 13 de julio de 2026: typecheck y build del frontend finalizaron correctamente; Vitest aprobó 2 de 2 pruebas frontend. El backend no compila ni ejecuta sus pruebas porque Prisma Client aún no fue generado; no existe migración versionada. El lint raíz falla porque el backend carece de script de lint. Estos resultados permanecen abiertos en los tickets de TEST y DEVOPS.
 
 ## Pull Request sugerido
 

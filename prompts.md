@@ -147,6 +147,51 @@ Documenta 3 de los tickets de trabajo principales del desarrollo, uno de backend
 
 ### 7. Pull Requests
 
+## 8. Evolución de la segunda entrega y organización por agentes
+
+### Contexto
+
+La segunda entrega fue generada inicialmente por un agente general a partir de un prompt amplio de construcción del MVP de reservas. Después, por decisión humana, el proceso se reconstruyó retrospectivamente como etapas especializadas. No se reinició el proyecto ni se crearon aplicaciones paralelas: los agentes revisan y alinean los artefactos existentes con el código.
+
+### Prompt inicial de la segunda entrega
+
+- **Objetivo:** construir el flujo residente → zona → disponibilidad → reserva aprobada → invitados → consulta de vigilancia, conectado a PostgreSQL.
+- **Herramienta:** Codex, agente general de desarrollo.
+- **Prompt:** instrucción de construcción de la segunda entrega funcional de ConectaPH, incluyendo RBAC persistido, alcance por copropiedad, frontend, backend, Prisma, seed, pruebas y documentación.
+- **Resultado:** se crearon los workspaces `backend` y `frontend`, esquema Prisma, API Express, SPA React, Docker Compose, seed y pruebas iniciales.
+- **Ajustes humanos:** limitar el MVP a reservas; exigir aprobación automática; vigilancia de solo lectura; mantener trazabilidad histórica de residente y unidad; documentar como pendiente aquello que no tenga validación ejecutada.
+- **Decisión final:** conservar la implementación y someterla a revisión especializada, sin reconstruirla desde cero.
+
+### Decisiones humanas de producto y datos
+
+1. ConectaPH permanece como producto general de propiedad horizontal, pero el MVP se limita a reservas.
+2. Las reservas sin concurrencia se aprueban automáticamente; no se usa `PENDING` en el flujo principal.
+3. Se eliminó el concepto rígido `tower`: las unidades usan `UnitType`, `UnitGroupType` y `UnitGroup`.
+4. Las agrupaciones no son jerárquicas; `unitGroupId` es opcional para soportar casas, locales y parqueaderos.
+5. `UserPropertyUnit` permite varias relaciones persona–unidad y define una unidad principal vigente.
+6. La reserva guarda `residentId` y `propertyUnitId` para trazabilidad histórica.
+7. `User` no contiene un rol fijo. `UserRole`, `RolePermission` y `Permission` forman un RBAC persistido y con alcance por copropiedad.
+8. Vigilancia es solo lectura y la seguridad efectiva se valida en backend; el frontend únicamente orienta la navegación.
+9. La interfaz avanzada para diseñar roles y permisos queda fuera del MVP.
+
+### Incorporación retrospectiva del modelo de agentes
+
+- **Objetivo:** hacer explícitas las etapas de producto, requisitos, historias, arquitectura, datos, API, desglose, implementación, seguridad, QA, DevOps, documentación y revisión final.
+- **Herramienta:** Codex con agentes especializados para auditoría y generación documental.
+- **Resultado:** `agents.md` y `.agents/` definen responsabilidades y handoffs reutilizables. Las etapas anteriores se describen como reconstruidas a partir de artefactos; no se afirma una ejecución histórica que no pueda demostrarse.
+- **Ajustes humanos:** separar evidencia estática de validación ejecutada y prohibir que una etapa marque como terminada una salida sin pruebas.
+- **Decisión final:** adoptar los catorce agentes como proceso para ajustes posteriores y entrega final.
+
+### Historias, tickets y trazabilidad
+
+- **Objetivo:** relacionar necesidades, criterios, trabajo técnico, código y pruebas reales.
+- **Resultado:** se crearon `5-historias-de-usuario.md`, `6-tickets-de-trabajo.md` y `trazabilidad.md`.
+- **Revisión humana:** los estados se ajustaron para distinguir “implementado en código”, “validación parcial” y “pendiente”; la presencia de un archivo E2E no equivale a una ejecución satisfactoria.
+
+### Correcciones posteriores a la revisión de IA
+
+La revisión detectó documentación heredada de microservicios, notificaciones y aprobación manual que no corresponde al monolito modular actual; ausencia de migración versionada y pruebas de integración; selectores E2E desalineados; contratos frontend/backend inconsistentes para invitados y unidades; guards atómicos faltantes en algunas lecturas; y scripts de lint incompletos. Estas brechas se registran como tickets o pendientes y no se presentan como funcionalidades verificadas.
+
 **Prompt 1:**
 
 **Prompt 2:**

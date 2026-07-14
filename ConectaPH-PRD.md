@@ -1,5 +1,7 @@
 # ConectaPH PRD
 
+> **Documento histórico de la primera entrega.** Sus referencias a registro público, aprobación manual/PENDING, notificaciones, control de accesos y microservicios no describen la implementación actual. Para el alcance y estado verificable de la segunda entrega consulte `README.md`, `5-historias-de-usuario.md` y `trazabilidad.md`. La especificación vigente es el MVP de aprobación automática de reservas, invitados y consulta de vigilancia sobre un monolito modular.
+
 ## 1. Propósito del documento
 
 Este documento define el Product Requirements Document (PRD) para ConectaPH, una plataforma web de gestión de reservas de zonas comunes en copropiedades. Está dirigida a residentes, personal de vigilancia y administración, y su objetivo es formalizar el alcance, los requisitos y los criterios de éxito del MVP.

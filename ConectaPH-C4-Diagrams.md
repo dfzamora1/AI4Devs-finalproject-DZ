@@ -1,5 +1,7 @@
 # Diagramas C4 - ConectaPH
 
+> **Diagramas históricos de la primera entrega.** Redis, RabbitMQ, API Gateway y los siete microservicios aquí representados no existen en el repositorio actual y no deben interpretarse como arquitectura implementada. La segunda entrega usa una SPA React, una API Express monolítica modular y PostgreSQL/Prisma; su actualización gráfica completa permanece en `TK-DOC-01`.
+
 Documentación de la arquitectura del sistema ConectaPH usando notación C4.
 
 ## 1. Diagrama de Contexto (C4 Context)
