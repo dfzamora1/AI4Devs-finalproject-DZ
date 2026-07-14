@@ -677,7 +677,7 @@ export function Security() {
               Anterior
             </button>
             <span>
-              PÃ¡gina {q.data.pagination.page} de {q.data.pagination.totalPages}{" "}
+              Página {q.data.pagination.page} de {q.data.pagination.totalPages}{" "}
               · {q.data.pagination.total} reservas
             </span>
             <button
