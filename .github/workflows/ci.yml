@@ -12,6 +12,8 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - name: Generate Prisma Client
+      - run: npx prisma generate --schema=backend/prisma/schema.prisma
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
