@@ -1,0 +1,2 @@
+import {describe,expect,it} from 'vitest';import {isCurrent} from '../../src/security.js';
+describe('role validity',()=>{const now=new Date('2030-01-01');it('accepts current active role',()=>expect(isCurrent({active:true,startDate:new Date('2029-01-01'),endDate:new Date('2031-01-01')},now)).toBe(true));it('rejects expired role',()=>expect(isCurrent({active:true,startDate:null,endDate:new Date('2029-01-01')},now)).toBe(false));it('rejects inactive role',()=>expect(isCurrent({active:false,startDate:null,endDate:null},now)).toBe(false))});

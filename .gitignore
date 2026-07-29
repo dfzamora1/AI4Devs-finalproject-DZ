@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.*
+!.env.example
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+*.log
+*.tmp
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+.DS_Store
+.idea/
+.vscode/

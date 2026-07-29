@@ -1,0 +1,228 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ReservationStatus {
+  APPROVED
+  CANCELLED
+  COMPLETED
+}
+
+enum RelationshipType {
+  OWNER
+  TENANT
+  RESIDENT
+  AUTHORIZED
+}
+
+model ResidentialComplex {
+  id        String    @id @default(uuid())
+  name      String
+  nit       String?   @unique
+  address   String
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  groups    UnitGroup[]
+  units     PropertyUnit[]
+  areas     CommonArea[]
+  userRoles UserRole[]
+}
+
+model UnitGroupType {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  groups    UnitGroup[]
+}
+
+model UnitGroup {
+  id              String   @id @default(uuid())
+  complexId       String
+  unitGroupTypeId String
+  identifier      String
+  name            String
+  description     String?
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  complex         ResidentialComplex @relation(fields: [complexId], references: [id])
+  type            UnitGroupType @relation(fields: [unitGroupTypeId], references: [id])
+  units           PropertyUnit[]
+
+  @@unique([complexId, unitGroupTypeId, identifier])
+}
+
+model UnitType {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  units       PropertyUnit[]
+}
+
+model PropertyUnit {
+  id          String   @id @default(uuid())
+  complexId   String
+  unitTypeId  String
+  unitGroupId String?
+  identifier  String
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  complex     ResidentialComplex @relation(fields: [complexId], references: [id])
+  type        UnitType @relation(fields: [unitTypeId], references: [id])
+  group       UnitGroup? @relation(fields: [unitGroupId], references: [id])
+  users       UserPropertyUnit[]
+  reservations Reservation[]
+
+  @@unique([complexId, unitGroupId, identifier])
+  @@index([complexId, identifier])
+}
+
+model User {
+  id             String   @id @default(uuid())
+  firstName      String
+  lastName       String
+  email          String   @unique
+  passwordHash   String
+  documentType   String?
+  documentNumber String?  @unique
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  roles          UserRole[]
+  units          UserPropertyUnit[]
+  reservations   Reservation[]
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  permissions RolePermission[]
+  users       UserRole[]
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  roles       RolePermission[]
+}
+
+model RolePermission {
+  id           String   @id @default(uuid())
+  roleId       String
+  permissionId String
+  createdAt    DateTime @default(now())
+  role         Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String
+  roleId    String
+  complexId String
+  active    Boolean  @default(true)
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role @relation(fields: [roleId], references: [id])
+  complex   ResidentialComplex @relation(fields: [complexId], references: [id])
+
+  @@unique([userId, roleId, complexId])
+}
+
+model UserPropertyUnit {
+  id               String   @id @default(uuid())
+  userId           String
+  propertyUnitId   String
+  relationshipType RelationshipType
+  isPrimary        Boolean  @default(false)
+  active           Boolean  @default(true)
+  startDate        DateTime?
+  endDate          DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  user             User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propertyUnit     PropertyUnit @relation(fields: [propertyUnitId], references: [id])
+
+  @@unique([userId, propertyUnitId, relationshipType])
+}
+
+model CommonArea {
+  id                         String   @id @default(uuid())
+  complexId                  String
+  name                       String
+  description                String?
+  capacity                   Int
+  openingTime                String
+  closingTime                String
+  reservationDurationMinutes Int
+  active                     Boolean  @default(true)
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+  complex                    ResidentialComplex @relation(fields: [complexId], references: [id])
+  reservations               Reservation[]
+
+  @@unique([complexId, name])
+}
+
+model Reservation {
+  id             String            @id @default(uuid())
+  commonAreaId   String
+  residentId     String
+  propertyUnitId String
+  startAt        DateTime
+  endAt          DateTime
+  status         ReservationStatus @default(APPROVED)
+  purpose        String?
+  attendeeCount  Int
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  cancelledAt    DateTime?
+  commonArea     CommonArea @relation(fields: [commonAreaId], references: [id])
+  resident       User @relation(fields: [residentId], references: [id])
+  propertyUnit   PropertyUnit @relation(fields: [propertyUnitId], references: [id])
+  guests         Guest[]
+
+  @@index([commonAreaId, startAt, endAt, status])
+}
+
+model Guest {
+  id             String   @id @default(uuid())
+  reservationId  String
+  firstName      String
+  lastName       String
+  documentType   String
+  documentNumber String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  reservation    Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@unique([reservationId, documentNumber])
+}

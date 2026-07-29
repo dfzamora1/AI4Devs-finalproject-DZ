@@ -1,134 +1,64 @@
-## Índice
+# ConectaPH — segunda entrega funcional
 
-0. [Ficha del proyecto](#0-ficha-del-proyecto)
-1. [Descripción general del producto](#1-descripción-general-del-producto)
-2. [Arquitectura del sistema](#2-arquitectura-del-sistema)
-3. [Modelo de datos](#3-modelo-de-datos)
-4. [Especificación de la API](#4-especificación-de-la-api)
-5. [Historias de usuario](#5-historias-de-usuario)
-6. [Tickets de trabajo](#6-tickets-de-trabajo)
-7. [Pull requests](#7-pull-requests)
+**Autor:** Diego F. Zamora Carmona · **Dominio:** Propiedad horizontal · **MVP:** reservas de zonas comunes
 
----
+ConectaPH conecta residentes, administración y vigilancia. Esta entrega implementa un monolito modular: el residente inicia sesión, consulta zonas y disponibilidad, obtiene aprobación automática si no hay solape, registra invitados; vigilancia consulta reservas aprobadas e invitados autorizados. Los datos se persisten en PostgreSQL mediante Prisma.
 
-## 0. Ficha del proyecto
+## Estado y alcance real
 
-### **0.1. Tu nombre completo:**
+Implementado en código: JWT, contexto de copropiedad, RBAC persistido, zonas, disponibilidad, reservas propias, detección de concurrencia, cancelación futura propia, invitados, consultas de vigilancia y consultas administrativas básicas; frontend React con rutas y navegación por permiso. La migración inicial, la integración y los contratos de invitados aún requieren corrección/validación; no se considera un flujo E2E aprobado. CRUD administrativo avanzado y cancelación administrativa quedan pendientes.
 
-### **0.2. Nombre del proyecto:**
+Stack: Node.js 20+, Express, TypeScript estricto, Zod, Prisma, PostgreSQL 16, bcrypt, JWT, React, Vite, Vitest, Testing Library y Playwright.
 
-### **0.3. Descripción breve del proyecto:**
+## Inicio rápido
 
-### **0.4. URL del proyecto:**
+1. Copie `.env.example` como `.env` y `backend/.env.example` como `backend/.env`.
+2. Ejecute `npm install` y `npm run db:up`.
+3. Ejecute `npm run db:migrate` y `npm run db:seed`.
+4. Ejecute `npm run dev`; UI en `http://localhost:5173`, API en `http://localhost:3000`.
 
-> Puede ser pública o privada, en cuyo caso deberás compartir los accesos de manera segura. Puedes enviarlos a [alvaro@lidr.co](mailto:alvaro@lidr.co) usando algún servicio como [onetimesecret](https://onetimesecret.com/).
+Credenciales solo de desarrollo (contraseña común `ConectaPH2026!`):
 
-### 0.5. URL o archivo comprimido del repositorio
+- `residente@conectaph.local`
+- `administrador@conectaph.local`
+- `vigilancia@conectaph.local`
 
-> Puedes tenerlo alojado en público o en privado, en cuyo caso deberás compartir los accesos de manera segura. Puedes enviarlos a [alvaro@lidr.co](mailto:alvaro@lidr.co) usando algún servicio como [onetimesecret](https://onetimesecret.com/). También puedes compartir por correo un archivo zip con el contenido
+## Arquitectura y seguridad
 
+El navegador consume una API Express; los módulos auth, zonas, reservas, invitados, vigilancia y administración comparten Prisma/PostgreSQL. El JWT identifica usuario y copropiedad activa, pero cada petición vuelve a cargar asignaciones activas/vigentes y permisos desde BD. La autorización combina permiso atómico, copropiedad y propiedad del recurso. `SECURITY` es solo lectura. El cliente nunca determina libremente `complexId`.
 
----
+La concurrencia usa una transacción serializable y busca solape con `existing.startAt < requested.endAt AND existing.endAt > requested.startAt`; por ello los intervalos adyacentes son válidos. La reserva conserva residente y unidad responsables.
 
-## 1. Descripción general del producto
+## Comandos
 
-> Describe en detalle los siguientes aspectos del producto:
+`npm run dev`, `dev:backend`, `dev:frontend`, `db:up`, `db:down`, `db:migrate`, `db:seed`, `typecheck`, `test`, `test:e2e`, `build`.
 
-### **1.1. Objetivo:**
+## API
 
-> Propósito del producto. Qué valor aporta, qué soluciona, y para quién.
+Todas las respuestas usan `{ success, data, message }` o `{ success:false, error:{code,message} }`.
 
-### **1.2. Características y funcionalidades principales:**
+- `GET /health`
+- `POST /api/auth/login`; `GET /api/auth/me`
+- `GET /api/common-areas`; `GET /api/common-areas/:id`; `GET /api/common-areas/:id/availability`
+- `POST /api/reservations`; `GET /api/reservations/my`; `GET /api/reservations/:id`
+- `PATCH /api/reservations/:id/cancel`
+- `POST|GET /api/reservations/:id/guests`; `DELETE /api/reservations/:reservationId/guests/:guestId`
+- `GET /api/security/reservations`; `GET /api/security/reservations/:id`
+- `GET /api/admin/reservations`; `GET /api/admin/users`; `GET /api/admin/property-units`
 
-> Enumera y describe las características y funcionalidades específicas que tiene el producto para satisfacer las necesidades identificadas.
+## Estructura y documentación
 
-### **1.3. Diseño y experiencia de usuario:**
+`backend/` contiene API, Prisma, seed y pruebas; `frontend/` la SPA; `e2e/` Playwright; `docker-compose.yml` PostgreSQL; `.github/` CI. El proceso está descrito en [agents.md](agents.md), las historias en [5-historias-de-usuario.md](5-historias-de-usuario.md), los tickets en [6-tickets-de-trabajo.md](6-tickets-de-trabajo.md) y la relación con código/pruebas en [trazabilidad.md](trazabilidad.md). Los documentos `ConectaPH-PRD.md` y `ConectaPH-C4-Diagrams.md` provienen de la primera entrega y requieren alineación completa antes de usarse como especificación vigente.
 
-> Proporciona imágenes y/o videotutorial mostrando la experiencia del usuario desde que aterriza en la aplicación, pasando por todas las funcionalidades principales.
+## Limitaciones
 
-### **1.4. Instrucciones de instalación:**
-> Documenta de manera precisa las instrucciones para instalar y poner en marcha el proyecto en local (librerías, backend, frontend, servidor, base de datos, migraciones y semillas de datos, etc.)
+No se implementan pagos, cartera, PQRS, notificaciones, QR, control de ingreso/salida ni editor de roles. El E2E requiere PostgreSQL migrado y sembrado. Las credenciales son exclusivamente locales. No existe despliegue ni PR remoto asociado a esta entrega.
 
----
+Validación del 13 de julio de 2026: typecheck y build del frontend finalizaron correctamente; Vitest aprobó 2 de 2 pruebas frontend. El backend no compila ni ejecuta sus pruebas porque Prisma Client aún no fue generado; no existe migración versionada. El lint raíz falla porque el backend carece de script de lint. Estos resultados permanecen abiertos en los tickets de TEST y DEVOPS.
 
-## 2. Arquitectura del Sistema
+## Pull Request sugerido
 
-### **2.1. Diagrama de arquitectura:**
-> Usa el formato que consideres más adecuado para representar los componentes principales de la aplicación y las tecnologías utilizadas. Explica si sigue algún patrón predefinido, justifica por qué se ha elegido esta arquitectura, y destaca los beneficios principales que aportan al proyecto y justifican su uso, así como sacrificios o déficits que implica.
+**Título:** Entrega 2 - MVP funcional de reservas ConectaPH  
+**Rama:** `feature-entrega2-DZC`
 
-
-### **2.2. Descripción de componentes principales:**
-
-> Describe los componentes más importantes, incluyendo la tecnología utilizada
-
-### **2.3. Descripción de alto nivel del proyecto y estructura de ficheros**
-
-> Representa la estructura del proyecto y explica brevemente el propósito de las carpetas principales, así como si obedece a algún patrón o arquitectura específica.
-
-### **2.4. Infraestructura y despliegue**
-
-> Detalla la infraestructura del proyecto, incluyendo un diagrama en el formato que creas conveniente, y explica el proceso de despliegue que se sigue
-
-### **2.5. Seguridad**
-
-> Enumera y describe las prácticas de seguridad principales que se han implementado en el proyecto, añadiendo ejemplos si procede
-
-### **2.6. Tests**
-
-> Describe brevemente algunos de los tests realizados
-
----
-
-## 3. Modelo de Datos
-
-### **3.1. Diagrama del modelo de datos:**
-
-> Recomendamos usar mermaid para el modelo de datos, y utilizar todos los parámetros que permite la sintaxis para dar el máximo detalle, por ejemplo las claves primarias y foráneas.
-
-
-### **3.2. Descripción de entidades principales:**
-
-> Recuerda incluir el máximo detalle de cada entidad, como el nombre y tipo de cada atributo, descripción breve si procede, claves primarias y foráneas, relaciones y tipo de relación, restricciones (unique, not null…), etc.
-
----
-
-## 4. Especificación de la API
-
-> Si tu backend se comunica a través de API, describe los endpoints principales (máximo 3) en formato OpenAPI. Opcionalmente puedes añadir un ejemplo de petición y de respuesta para mayor claridad
-
----
-
-## 5. Historias de Usuario
-
-> Documenta 3 de las historias de usuario principales utilizadas durante el desarrollo, teniendo en cuenta las buenas prácticas de producto al respecto.
-
-**Historia de Usuario 1**
-
-**Historia de Usuario 2**
-
-**Historia de Usuario 3**
-
----
-
-## 6. Tickets de Trabajo
-
-> Documenta 3 de los tickets de trabajo principales del desarrollo, uno de backend, uno de frontend, y uno de bases de datos. Da todo el detalle requerido para desarrollar la tarea de inicio a fin teniendo en cuenta las buenas prácticas al respecto. 
-
-**Ticket 1**
-
-**Ticket 2**
-
-**Ticket 3**
-
----
-
-## 7. Pull Requests
-
-> Documenta 3 de las Pull Requests realizadas durante la ejecución del proyecto
-
-**Pull Request 1**
-
-**Pull Request 2**
-
-**Pull Request 3**
-
+Describir flujo E2E, RBAC, alcance por copropiedad, migración/seed, comandos ejecutados, evidencias, riesgos y pendientes. Este texto no afirma que el PR exista.
