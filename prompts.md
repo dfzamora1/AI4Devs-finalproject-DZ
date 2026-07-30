@@ -1,199 +1,417 @@
-> Detalla en esta sección los prompts principales utilizados durante la creación del proyecto, que justifiquen el uso de asistentes de código en todas las fases del ciclo de vida del desarrollo. Esperamos un máximo de 3 por sección, principalmente los de creación inicial o  los de corrección o adición de funcionalidades que consideres más relevantes.
-Puedes añadir adicionalmente la conversación completa como link o archivo adjunto si así lo consideras
+# Prompts y uso de IA
 
+Este registro distingue evidencia histórica de reconstrucción. Los prompts de
+producto, PRD, arquitectura, datos, API, historias y tickets provienen del
+archivo original. Cuando no se conservó el texto exacto, se marca expresamente
+como **reconstrucción fiel**; no representa una conversación literal.
 
-## Índice
+La segunda entrega fue creada inicialmente por un agente general de Codex. El
+modelo de catorce agentes se incorporó después para organizar la auditoría de
+artefactos existentes; no se afirma que esos agentes ejecutaran históricamente
+la implementación.
 
-1. [Descripción general del producto](#1-descripción-general-del-producto)
-2. [Arquitectura del sistema](#2-arquitectura-del-sistema)
-3. [Modelo de datos](#3-modelo-de-datos)
-4. [Especificación de la API](#4-especificación-de-la-api)
-5. [Historias de usuario](#5-historias-de-usuario)
-6. [Tickets de trabajo](#6-tickets-de-trabajo)
-7. [Pull requests](#7-pull-requests)
+## 1. Descubrimiento de producto
 
----
+### Prompt 1
 
-## 1. Descripción general del producto
+**Objetivo**  
+Definir problema, valor, usuarios y recorrido del MVP.
 
-**Prompt 1:**
-Actua como un experto en producto digital, con experiencia en plataformas de propiedad horizontal. Estoy diseñando una producto llamando ConectaPH, una plataforma web para conectar residentes, administración y vigilancia en la copropiedad. La aplicación contará con varios modulos, pero vamos a trabajar un MVP de gestión de reservas de zonas comunes.
+**Herramienta**  
+Asistente de IA (herramienta exacta no conservada).
 
-Necesito que me ayudes a definir:
+**Prompt**  
+“Actúa como experto en producto digital para propiedad horizontal. Define las
+funcionalidades prioritarias, beneficios, alternativas manuales y recorridos del
+residente y vigilancia para ConectaPH, limitado a reservas de zonas comunes.”
 
-- ¿Qué funcionalidades básicas debe tener este MVP?
-- Ordénalas de mayor a menor prioridad.
-- ¿Qué beneficios obtiene la copropiedad al usar ConectaPH?
-- ¿Qué alternativas manuales existen actualmente y cuáles son sus problemas?
-- ¿Cómo sería el customer journey de un residente que reserva una zona común?
-- ¿Cómo sería el customer journey de vigilancia al consultar los invitados autorizados?
+**Resultado generado**  
+Propuesta amplia de plataforma y priorización inicial.
 
-Actualiza esta información en el archivo readme.md
-**Prompt 2:**
-Actúa como un Product Manager senior. Necesito un PRD para ConectaPH. El público objetivo son todos los residentes, personal de vigilancia y administración de un conjunto residencial que quieren reservar o hacer el seguimiento de las reservas y personas autorizadas. Genera un PRD completo incluyendo: problema a resolver, objetivos medibles, user stories principales, requisitos funcionales y no funcionales, y criterios de éxito. Agrega el resultado en una archivo [ConectaPH-PRD.md] en formato markdown
-**Prompt 3:**
-Eres un analista de software experto. Estoy construyendo un sistema de reservas para una copropiedad. Enumera y describe brevemente los casos de uso más importantes a implementar para lograr una funcionalidad básica. Agregalo en el archivo PRD completo ConectaPH-DZ.md al final.
----
+**Ajustes humanos**  
+Diego eligió el nombre ConectaPH y limitó el MVP al módulo de reservas.
 
-## 2. Arquitectura del Sistema
+**Decisión final**  
+Resolver reservas e invitados; excluir PQRS, cartera y demás módulos.
 
-### **2.1. Diagrama de arquitectura:**
+**Artefactos relacionados**
 
-**Prompt 1:**
-Eres un brillante arquitecto de software. Eres capaz de diseñar, explicar y diagramar los diferentes aspectos de un sistema de software.
-Estoy construyendo un sistema de gestión de reservas para una copropiedad. He definido las entidades Residentes, usuarios, Recursos (Zonas comunes), accesos, reservas.
-Qué otras entidades del modelo de datos son importantes en un sistema? Dame los campos más importantes de cada una y cómo se relacionan entre entidades.
-(Código diagrama mermaid)
+- `ConectaPH-PRD.md`
+- `README.md`
 
-**Prompt 2:**
-Agrega la arquitectura al final del archivo ConectaPH-PRD.md y actualiza el archivo readme.md en la sección Arquitectura del sistema.
-**Prompt 3:**
+## 2. PRD y alcance
 
-### **2.2. Descripción de componentes principales:**
+### Prompt 1
 
-**Prompt 1:**
-De acuerdo a lo que se ha estructurado del proyecto de aplicación ConectaPH, genera un diagrama de C4.
-**Prompt 2:**
+**Objetivo**  
+Crear requisitos medibles.
 
-**Prompt 3:**
+**Herramienta**  
+Asistente de IA (herramienta exacta no conservada).
 
-### **2.3. Descripción de alto nivel del proyecto y estructura de ficheros**
+**Prompt**  
+“Actúa como Product Manager senior y genera un PRD para residentes,
+administración y vigilancia, con problema, objetivos, historias, requisitos y
+criterios de éxito.”
 
-**Prompt 1:**
+**Resultado generado**  
+PRD inicial con ideas de alcance futuro.
 
-**Prompt 2:**
+**Ajustes humanos**  
+Se separó el MVP real del roadmap y se definió aprobación automática cuando no
+hay concurrencia.
 
-**Prompt 3:**
+**Decisión final**  
+El flujo principal termina en reserva `APPROVED`; no usa aprobación manual.
 
-### **2.4. Infraestructura y despliegue**
+**Artefactos relacionados**
 
-**Prompt 1:**
+- `ConectaPH-PRD.md`
+- HU-01 a HU-06
 
-**Prompt 2:**
+## 3. Historias de usuario
 
-**Prompt 3:**
+### Prompt 1
 
-### **2.5. Seguridad**
+**Objetivo**  
+Expresar el valor como criterios verificables.
 
-**Prompt 1:**
+**Herramienta**  
+Asistente de IA y revisión posterior con Codex.
 
-**Prompt 2:**
+**Prompt**  
+“Documenta las historias principales del desarrollo con buenas prácticas.”
 
-**Prompt 3:**
+**Resultado generado**  
+Historias de residente, vigilancia y administración.
 
-### **2.6. Tests**
+**Ajustes humanos**  
+Se vinculó el registro de invitados a una reserva propia y la consulta de
+vigilancia se restringió a solo lectura.
 
-**Prompt 1:**
+**Decisión final**  
+Mantener únicamente historias respaldadas por rutas y pruebas.
 
-**Prompt 2:**
+**Artefactos relacionados**
 
-**Prompt 3:**
+- `5-historias-de-usuario.md`
+- `trazabilidad.md`
 
----
+## 4. Tickets de trabajo
 
-### 3. Modelo de Datos
+### Prompt 1
 
-**Prompt 1:**
-Eres un brillante arquitecto de software. Eres capaz de diseñar, explicar y diagramar los diferentes aspectos de un sistema de software. Estoy construyendo un sistema de gestión de reservas para una copropiedad. He definido las entidades Residentes, usuarios, Recursos (Zonas comunes), accesos, reservas. Qué otras entidades del modelo de datos son importantes en un sistema? Dame los campos más importantes de cada una y cómo se relacionan entre entidades. (Código diagrama mermaid).
+**Objetivo**  
+Desglosar historias en trabajo técnico.
 
-**Prompt 2:**
-Agrega la arquitectura al final del archivo ConectaPH-PRD.md y actualiza el archivo readme.md en la sección Arquitectura del sistema.
+**Herramienta**  
+Asistente de IA y revisión posterior con Codex.
 
-**Prompt 3:**
+**Prompt**  
+“Documenta tickets de backend, frontend y datos con detalle suficiente para
+desarrollarlos de inicio a fin.”
 
----
+**Resultado generado**  
+Tickets técnicos iniciales.
 
-### 4. Especificación de la API
+**Ajustes humanos**  
+Se añadieron dependencias, evidencia y estados basados en el repositorio.
 
-**Prompt 1:**
-Eres un brillante arquitecto de software. Eres capaz de diseñar, explicar y diagramar los diferentes aspectos de un sistema de software. Estoy construyendo un sistema de gestión de reservas para una copropiedad. He definido las entidades Residentes, usuarios, Recursos (Zonas comunes), accesos, reservas.
+**Decisión final**  
+No cerrar tickets de integración, E2E o despliegue sin ejecución real.
 
-Qué otras entidades del modelo de datos son importantes en un sistema? Dame los campos más importantes de cada una y cómo se relacionan entre entidades. (Código diagrama mermaid)
+**Artefactos relacionados**
 
-Agrega la arquitectura al final del archivo ConectaPH-PRD.md y actualiza el archivo readme.md en la sección Arquitectura del sistema.
+- `6-tickets-de-trabajo.md`
+- `trazabilidad.md`
 
-**Prompt 2:**
-Arquitectura de microservicios para un sistema de reserva de recursos, dónde todos los MS apuntan a la misma bd. El frontend se comunica a través del API. Todo alojado en contenedores on premise. Incluye los servicios necesarios. La base de datos es relacional en postgres. 
+## 5. Arquitectura
 
-Describe los endpoints principales (máximo 3) en formato OpenAPI. Opcionalmente puedes añadir un ejemplo de petición y de respuesta para mayor claridad.
+### Prompt 1
 
-Actualiza en el readme.md en el aparte de Especificación de la API.
+**Objetivo**  
+Representar componentes y relaciones.
 
-**Prompt 3:**
-De acuerdo a lo que se ha estructurado del proyecto de aplicación ConectaPH, genera un diagrama de C4.
+**Herramienta**  
+Asistente de IA (prompt original conservado parcialmente).
 
----
+**Prompt**  
+“De acuerdo con ConectaPH, genera un diagrama C4.”
 
-### 5. Historias de Usuario
+**Resultado generado**  
+Diagramas y propuestas que incluyeron microservicios.
 
-**Prompt 1:**
-Documenta 3 de las historias de usuario principales utilizadas durante el desarrollo, teniendo en cuenta las buenas prácticas de producto al respecto. Actualiza En el archivo readme.md en el numeral 5 historias de usuario. 
+**Ajustes humanos**  
+Se descartó la arquitectura de microservicios por no corresponder al código.
 
-**Prompt 2:**
+**Decisión final**  
+Monolito modular con SPA, API y PostgreSQL.
 
-**Prompt 3:**
+**Artefactos relacionados**
 
----
+- `ConectaPH-C4-Diagrams.md`
+- `C4Context.mmd`
+- `C4Container.mmd`
 
-### 6. Tickets de Trabajo
+## 6. Modelo de datos
 
-**Prompt 1:**
-Documenta 3 de los tickets de trabajo principales del desarrollo, uno de backend, uno de frontend, y uno de bases de datos. Da todo el detalle requerido para desarrollar la tarea de inicio a fin teniendo en cuenta las buenas prácticas al respecto. Actualiza el readme.md
-**Prompt 2:**
+### Prompt 1
 
-**Prompt 3:**
+**Objetivo**  
+Modelar copropiedad, unidades, usuarios y reservas.
 
----
+**Herramienta**  
+Asistente de IA y Codex.
 
-### 7. Pull Requests
+**Prompt**  
+“Propón entidades, campos y relaciones para un sistema de reservas de
+copropiedad.” La evolución detallada es una **reconstrucción fiel**.
 
-## 8. Evolución de la segunda entrega y organización por agentes
+**Resultado generado**  
+Modelo inicial con residente, usuario, recurso y reserva.
 
-### Contexto
+**Ajustes humanos**  
+Diego eliminó `tower` como campo fijo; creó `UnitType`, `UnitGroupType`,
+`UnitGroup` y `UserPropertyUnit`; descartó agrupaciones jerárquicas.
 
-La segunda entrega fue generada inicialmente por un agente general a partir de un prompt amplio de construcción del MVP de reservas. Después, por decisión humana, el proceso se reconstruyó retrospectivamente como etapas especializadas. No se reinició el proyecto ni se crearon aplicaciones paralelas: los agentes revisan y alinean los artefactos existentes con el código.
+**Decisión final**  
+La agrupación es opcional y la reserva conserva residente y unidad responsable.
 
-### Prompt inicial de la segunda entrega
+**Artefactos relacionados**
 
-- **Objetivo:** construir el flujo residente → zona → disponibilidad → reserva aprobada → invitados → consulta de vigilancia, conectado a PostgreSQL.
-- **Herramienta:** Codex, agente general de desarrollo.
-- **Prompt:** instrucción de construcción de la segunda entrega funcional de ConectaPH, incluyendo RBAC persistido, alcance por copropiedad, frontend, backend, Prisma, seed, pruebas y documentación.
-- **Resultado:** se crearon los workspaces `backend` y `frontend`, esquema Prisma, API Express, SPA React, Docker Compose, seed y pruebas iniciales.
-- **Ajustes humanos:** limitar el MVP a reservas; exigir aprobación automática; vigilancia de solo lectura; mantener trazabilidad histórica de residente y unidad; documentar como pendiente aquello que no tenga validación ejecutada.
-- **Decisión final:** conservar la implementación y someterla a revisión especializada, sin reconstruirla desde cero.
+- `backend/prisma/schema.prisma`
+- Ticket DATA
 
-### Decisiones humanas de producto y datos
+## 7. API
 
-1. ConectaPH permanece como producto general de propiedad horizontal, pero el MVP se limita a reservas.
-2. Las reservas sin concurrencia se aprueban automáticamente; no se usa `PENDING` en el flujo principal.
-3. Se eliminó el concepto rígido `tower`: las unidades usan `UnitType`, `UnitGroupType` y `UnitGroup`.
-4. Las agrupaciones no son jerárquicas; `unitGroupId` es opcional para soportar casas, locales y parqueaderos.
-5. `UserPropertyUnit` permite varias relaciones persona–unidad y define una unidad principal vigente.
-6. La reserva guarda `residentId` y `propertyUnitId` para trazabilidad histórica.
-7. `User` no contiene un rol fijo. `UserRole`, `RolePermission` y `Permission` forman un RBAC persistido y con alcance por copropiedad.
-8. Vigilancia es solo lectura y la seguridad efectiva se valida en backend; el frontend únicamente orienta la navegación.
-9. La interfaz avanzada para diseñar roles y permisos queda fuera del MVP.
+### Prompt 1
 
-### Incorporación retrospectiva del modelo de agentes
+**Objetivo**  
+Definir contratos HTTP del flujo.
 
-- **Objetivo:** hacer explícitas las etapas de producto, requisitos, historias, arquitectura, datos, API, desglose, implementación, seguridad, QA, DevOps, documentación y revisión final.
-- **Herramienta:** Codex con agentes especializados para auditoría y generación documental.
-- **Resultado:** `agents.md` y `.agents/` definen responsabilidades y handoffs reutilizables. Las etapas anteriores se describen como reconstruidas a partir de artefactos; no se afirma una ejecución histórica que no pueda demostrarse.
-- **Ajustes humanos:** separar evidencia estática de validación ejecutada y prohibir que una etapa marque como terminada una salida sin pruebas.
-- **Decisión final:** adoptar los catorce agentes como proceso para ajustes posteriores y entrega final.
+**Herramienta**  
+Asistente de IA y Codex.
 
-### Historias, tickets y trazabilidad
+**Prompt**  
+“Describe endpoints principales y ejemplos de petición/respuesta.” La
+adaptación al monolito es una **reconstrucción fiel**.
 
-- **Objetivo:** relacionar necesidades, criterios, trabajo técnico, código y pruebas reales.
-- **Resultado:** se crearon `5-historias-de-usuario.md`, `6-tickets-de-trabajo.md` y `trazabilidad.md`.
-- **Revisión humana:** los estados se ajustaron para distinguir “implementado en código”, “validación parcial” y “pendiente”; la presencia de un archivo E2E no equivale a una ejecución satisfactoria.
+**Resultado generado**  
+Propuesta OpenAPI parcial basada inicialmente en microservicios.
 
-### Correcciones posteriores a la revisión de IA
+**Ajustes humanos**  
+Se eliminó `complexId` controlable del flujo normal y se normalizaron errores
+`401`, `403`, `409` y `422`.
 
-La revisión detectó documentación heredada de microservicios, notificaciones y aprobación manual que no corresponde al monolito modular actual; ausencia de migración versionada y pruebas de integración; selectores E2E desalineados; contratos frontend/backend inconsistentes para invitados y unidades; guards atómicos faltantes en algunas lecturas; y scripts de lint incompletos. Estas brechas se registran como tickets o pendientes y no se presentan como funcionalidades verificadas.
+**Decisión final**  
+Express deriva copropiedad del JWT y valida propiedad del recurso.
 
-**Prompt 1:**
+**Artefactos relacionados**
 
-**Prompt 2:**
+- `backend/src/app.ts`
+- HU-01 a HU-06
 
-**Prompt 3:**
+## 8. Backend
+
+### Prompt 1
+
+**Objetivo**  
+Construir API, persistencia y reglas.
+
+**Herramienta**  
+Codex, agente general.
+
+**Prompt**  
+**Reconstrucción fiel:** “Implementa el MVP de reservas con Express, Prisma,
+PostgreSQL, aprobación automática, concurrencia, invitados, RBAC y seed.”
+
+**Resultado generado**  
+API, servicios de reserva, esquema y datos de demostración.
+
+**Ajustes humanos**  
+Se mantuvo el alcance de reservas y se exigió relación activa
+`UserPropertyUnit`.
+
+**Decisión final**  
+Controladores delgados y reglas críticas en backend.
+
+**Artefactos relacionados**
+
+- `backend/src/`
+- `backend/prisma/seed.ts`
+
+## 9. Frontend
+
+### Prompt 1
+
+**Objetivo**  
+Crear una SPA conectada a la API.
+
+**Herramienta**  
+Codex, agente general.
+
+**Prompt**  
+**Reconstrucción fiel:** “Implementa login, zonas, reserva, invitados,
+vigilancia y administración en React, adaptando rutas a permisos.”
+
+**Resultado generado**  
+SPA React y cliente HTTP.
+
+**Ajustes humanos**  
+Se aclaró que ocultar navegación no autoriza operaciones.
+
+**Decisión final**  
+El backend sigue siendo la autoridad; vigilancia solo consulta.
+
+**Artefactos relacionados**
+
+- `frontend/src/`
+- `e2e/resident-flow.spec.ts`
+
+## 10. Seguridad y RBAC
+
+### Prompt 1
+
+**Objetivo**  
+Evitar bypass de permisos y copropiedad.
+
+**Herramienta**  
+Codex.
+
+**Prompt**  
+**Reconstrucción fiel:** “Revisa RBAC persistido, vigencia, alcance por
+copropiedad, acceso horizontal y separación entre frontend y backend.”
+
+**Resultado generado**  
+Modelo `User`, `Role`, `Permission`, `UserRole` y `RolePermission`.
+
+**Ajustes humanos**  
+Diego decidió no usar un rol fijo en `User`; los roles se asignan por
+copropiedad y los permisos se comprueban en backend.
+
+**Decisión final**  
+JWT con copropiedad, recarga de asignaciones vigentes y filtros por recurso.
+
+**Artefactos relacionados**
+
+- `backend/src/security.ts`
+- `backend/tests/unit/security.test.ts`
+
+## 11. Pruebas
+
+### Prompt 1
+
+**Objetivo**  
+Comprobar reglas, API y flujo real.
+
+**Herramienta**  
+Codex.
+
+**Prompt**  
+**Reconstrucción fiel:** “Audita unitarias, agrega integración con PostgreSQL y
+un E2E Playwright determinista para reserva e invitado.”
+
+**Resultado generado**  
+Unitarias, pruebas UI, suite de integración y E2E.
+
+**Ajustes humanos**  
+Se prohibieron mocks como sustituto del backend y se registró como no ejecutado
+lo bloqueado por Docker.
+
+**Decisión final**  
+No afirmar que integración/E2E pasan hasta ejecutarlos en un entorno con BD.
+
+**Artefactos relacionados**
+
+- `backend/tests/`
+- `frontend/src/test/`
+- `e2e/`
+- `TESTING.md`
+
+## 12. CI/CD
+
+### Prompt 1
+
+**Objetivo**  
+Hacer reproducible la validación.
+
+**Herramienta**  
+Codex.
+
+**Prompt**  
+**Reconstrucción fiel:** “Corrige GitHub Actions para instalar, generar Prisma,
+preparar PostgreSQL, ejecutar typecheck, pruebas y build.”
+
+**Resultado generado**  
+Workflow con servicio PostgreSQL.
+
+**Ajustes humanos**  
+Después de errores de Prisma en CI se ubicó explícitamente `db:generate` antes
+del typecheck y se evitó un lint raíz no fiable.
+
+**Decisión final**  
+CI valida calidad; no despliega ni ejecuta Playwright.
+
+**Artefactos relacionados**
+
+- `.github/workflows/ci.yml`
+- `package.json`
+
+## 13. Despliegue
+
+### Prompt 1
+
+**Objetivo**  
+Documentar una publicación segura.
+
+**Herramienta**  
+Codex.
+
+**Prompt**  
+**Reconstrucción fiel:** “Documenta frontend, API, PostgreSQL, secretos, CORS,
+health check, comandos, fallos y rollback sin inventar URLs.”
+
+**Resultado generado**  
+Guía agnóstica de proveedor.
+
+**Ajustes humanos**  
+No se declaró despliegue ni CI/CD automático sin evidencia.
+
+**Decisión final**  
+Publicación y URL quedan pendientes de ejecución humana.
+
+**Artefactos relacionados**
+
+- `DEPLOYMENT.md`
+- `docs/evidencias/README.md`
+
+## 14. Revisión final
+
+### Prompt 1
+
+**Objetivo**  
+Cerrar la entrega sobre evidencia real.
+
+**Herramienta**  
+Codex.
+
+**Prompt**  
+El prompt de cierre del 29 de julio de 2026 solicitó auditar rama, flujo, RBAC,
+pruebas, CI, documentación, evidencias y release, sin push ni tag.
+
+**Resultado generado**  
+Correcciones acotadas, documentación final y registro de validaciones.
+
+**Ajustes humanos**  
+Diego exige distinguir propuestas de IA del resultado final y conservar revisión
+humana en cada handoff.
+
+**Decisión final**  
+Preparar `v1.0-final-DZC` sin crear tag, push, PR ni release remoto.
+
+**Artefactos relacionados**
+
+- `README.md`
+- `RELEASE.md`
+- `agents.md`
+- `.agents/`

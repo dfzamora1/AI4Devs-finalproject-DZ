@@ -1,6 +1,8 @@
 # Historias de usuario — ConectaPH
 
-Estado basado en auditoría estática del repositorio al 13 de julio de 2026. “Implementada” indica código existente, no ejecución E2E comprobada.
+Estado revisado el 29 de julio de 2026. “Implementada” indica código existente;
+la suite de integración quedó preparada pero no ejecutada por ausencia de
+PostgreSQL/Docker, y el E2E no se considera aprobado.
 
 ## HU-001 — Autenticarse en el sistema
 
@@ -15,7 +17,7 @@ Estado basado en auditoría estática del repositorio al 13 de julio de 2026. �
 - **Entidades:** `User`, `UserRole`, `Role`, `Permission`, `ResidentialComplex`, `UserPropertyUnit`.
 - **Permisos / endpoints:** `PROFILE_VIEW`; `POST /api/auth/login`, `GET /api/auth/me`.
 - **Dependencias:** HU-008; TK-DB-01, TK-BE-01, TK-SEC-01.
-- **Pruebas relacionadas:** rol vigente/vencido en `backend/tests/unit/security.test.ts`; faltan integración de login y `/me`.
+- **Pruebas relacionadas:** vigencia en `backend/tests/unit/security.test.ts`; login y `/me` en `backend/tests/integration/api.test.ts` (ejecución pendiente).
 - **Evidencia:** `backend/src/app.ts`, `backend/src/security.ts`, `frontend/src/auth.tsx`.
 
 **Criterios:** Given credenciales y asignación vigentes, when inicia sesión, then recibe JWT; Given credenciales inválidas, then recibe `401`; Given JWT válido, when consulta `/me`, then recibe contexto y permisos.
@@ -87,7 +89,7 @@ Estado basado en auditoría estática del repositorio al 13 de julio de 2026. �
 - **Entidades:** `Reservation`, `User`, `CommonArea`, `PropertyUnit`.
 - **Permisos / endpoints:** `RESERVATION_VIEW_OWN`; `GET /api/reservations/my`, `GET /api/reservations/:id`.
 - **Dependencias:** HU-001, HU-004, HU-008; TK-BE-03, TK-FE-02.
-- **Pruebas relacionadas:** Pendientes consulta propia y denegación de reserva ajena.
+- **Pruebas relacionadas:** denegación de reserva ajena en `backend/tests/integration/api.test.ts` (ejecución pendiente).
 - **Evidencia:** filtros en `backend/src/app.ts`, vistas en `frontend/src/pages.tsx`.
 
 **Criterios:** Given residente autenticado, when lista, then solo recibe reservas propias; Given ID ajeno/de otro complejo, when abre detalle, then no se expone y recibe `404`.
@@ -105,7 +107,7 @@ Estado basado en auditoría estática del repositorio al 13 de julio de 2026. �
 - **Entidades:** `Guest`, `Reservation`, `User`.
 - **Permisos / endpoints:** `GUEST_CREATE_OWN`, `GUEST_VIEW_OWN`, `GUEST_DELETE_OWN`; `POST/GET /api/reservations/:id/guests`, `DELETE .../:guestId`.
 - **Dependencias:** HU-004, HU-005, HU-008; TK-BE-04, TK-FE-02.
-- **Pruebas relacionadas:** Pendientes persistencia, duplicidad, recurso ajeno y vigilancia de solo lectura.
+- **Pruebas relacionadas:** persistencia y vigilancia sin escritura en `backend/tests/integration/api.test.ts` (ejecución pendiente); faltan duplicidad y recurso invitado ajeno.
 - **Evidencia:** `backend/prisma/schema.prisma`, `backend/src/app.ts`, `frontend/src/pages.tsx`.
 
 **Criterios:** Given reserva aprobada propia, when agrega invitado válido, then persiste y responde `201`; Given reserva ajena, then no se expone; Given consulta propia, then devuelve sus invitados.
@@ -123,7 +125,7 @@ Estado basado en auditoría estática del repositorio al 13 de julio de 2026. �
 - **Entidades:** `Reservation`, `Guest`, `CommonArea`, `PropertyUnit`, `User`.
 - **Permisos / endpoints:** `RESERVATION_VIEW_APPROVED`, `GUEST_VIEW_AUTHORIZED`; `GET /api/security/reservations`, `GET /api/security/reservations/:id`, consulta de invitados.
 - **Dependencias:** HU-001, HU-006, HU-008; TK-BE-05, TK-SEC-01, TK-FE-03.
-- **Pruebas relacionadas:** Pendientes filtro por fecha/complejo y matriz negativa de escritura.
+- **Pruebas relacionadas:** filtro por fecha y matriz negativa de escritura en `backend/tests/integration/api.test.ts` (ejecución pendiente); falta multi-copropiedad.
 - **Evidencia:** `backend/src/app.ts`, matriz SECURITY en `backend/prisma/seed.ts`.
 
 **Criterios:** Given vigilancia, when consulta fecha, then solo ve aprobadas del complejo; when abre detalle, then ve zona, unidad, residente e invitados; when intenta escribir, then recibe `403`.
