@@ -1,6 +1,6 @@
 # Tickets de trabajo — ConectaPH
 
-Estados auditados estáticamente al 13 de julio de 2026. Categorías usadas: PRODUCT, DOCUMENTATION, DATABASE, BACKEND, FRONTEND, SECURITY, TEST y DEVOPS.
+Estados revisados al 29 de julio de 2026. Categorías usadas: PRODUCT, DOCUMENTATION, DATABASE, BACKEND, FRONTEND, SECURITY, TEST y DEVOPS.
 
 ## Resumen y trazabilidad
 
@@ -19,8 +19,8 @@ Estados auditados estáticamente al 13 de julio de 2026. Categorías usadas: PRO
 | TK-FE-03 | FRONTEND | Vista de vigilancia | HU-007 | M | Implementado; E2E pendiente |
 | TK-SEC-01 | SECURITY | RBAC, vigencia y alcance | HU-001, HU-005–HU-008 | L | Implementado; matriz pendiente |
 | TK-TEST-01 | TEST | Reglas unitarias de reserva | HU-003, HU-004 | M | Parcialmente terminado |
-| TK-TEST-02 | TEST | Integración, autorización y E2E | HU-001–HU-008 | L | Pendiente |
-| TK-DEVOPS-01 | DEVOPS | PostgreSQL, build y automatización | HU-001–HU-008 | M | Pendiente de evidencia |
+| TK-TEST-02 | TEST | Integración, autorización y E2E | HU-001–HU-008 | L | Implementado; ejecución con BD pendiente |
+| TK-DEVOPS-01 | DEVOPS | PostgreSQL, build y automatización | HU-001–HU-008 | M | Implementado; CI remoto pendiente |
 
 ## Campos detallados
 
@@ -131,15 +131,15 @@ Estados auditados estáticamente al 13 de julio de 2026. Categorías usadas: PRO
 ### TK-TEST-02 — Integración, autorización y E2E
 
 - **Descripción:** Cubrir el flujo persistente y matriz positiva/negativa.
-- **Tipo/categoría:** TEST. **Historia:** HU-001–HU-008. **Estimación:** L. **Estado:** Pendiente.
+- **Tipo/categoría:** TEST. **Historia:** HU-001–HU-008. **Estimación:** L. **Estado:** Implementado; ejecución con BD pendiente.
 - **Dependencias:** todos los tickets BE/FE/SEC y TK-DEVOPS-01.
 - **Criterios de aceptación:** Login, `/me`, reserva/conflicto, invitados, vigilancia, rol vencido, permiso ausente, complejo y recurso ajeno pasan contra PostgreSQL.
-- **Evidencia:** no existe `backend/tests/integration`; E2E presente sin resultado acreditado.
+- **Evidencia:** `backend/tests/integration/api.test.ts` y `e2e/resident-flow.spec.ts`; sin resultado acreditado por ausencia local de PostgreSQL.
 
 ### TK-DEVOPS-01 — PostgreSQL, build y automatización
 
 - **Descripción:** Levantar BD, migrar, sembrar, typecheck, probar y compilar reproduciblemente.
-- **Tipo/categoría:** DEVOPS. **Historia:** HU-001–HU-008. **Estimación:** M. **Estado:** Pendiente de evidencia.
+- **Tipo/categoría:** DEVOPS. **Historia:** HU-001–HU-008. **Estimación:** M. **Estado:** Implementado; CI remoto pendiente.
 - **Dependencias:** TK-DB-01 y TK-TEST-02.
 - **Criterios de aceptación:** Docker saludable; migración/seed exitosos; tests y builds terminan en cero; `/health` responde.
 - **Evidencia:** `docker-compose.yml`, `package.json`, `backend/package.json`, `.env.example`; sin resultado ejecutado acreditado.

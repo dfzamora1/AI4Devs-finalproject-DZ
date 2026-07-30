@@ -6,6 +6,6 @@ export default defineConfig({
   use: { baseURL: 'http://127.0.0.1:5173', trace: 'on-first-retry' },
   webServer: [
     { command: 'npm run dev:backend', url: 'http://127.0.0.1:3000/health', reuseExistingServer: true },
-    { command: 'npm run dev:frontend -- --host 127.0.0.1', url: 'http://127.0.0.1:5173', reuseExistingServer: true }
+    { command: 'npm run dev -w frontend -- --host 127.0.0.1', url: 'http://127.0.0.1:5173', reuseExistingServer: true }
   ]
 });
